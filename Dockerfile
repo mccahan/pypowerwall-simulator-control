@@ -21,7 +21,27 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN yarn build
 
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/out ./
+
+COPY --chown=nextjs:nodejs docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
+
+USER nextjs
+
 EXPOSE 3000
 
-RUN chmod +x docker-entrypoint.sh
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
 CMD ["/bin/sh", "docker-entrypoint.sh"]
