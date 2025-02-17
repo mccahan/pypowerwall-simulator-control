@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Slider } from "@/components/ui/slider"
 
+const getSlug = (name: string) => name.toLowerCase().replace(/ /g, "-")
+
 const scenarios = [
   { name: "Battery Exporting", icon: Battery },
   { name: "Solar Exporting", icon: SolarPanel },
@@ -54,8 +56,29 @@ export default function SimulatorDashboard() {
     fetchScenarioData()
   }, [activeScenario])
 
+  useEffect(() => {
+    const fetchActiveScenario = async () => {
+      setIsLoading(true)
+      setError(null)
+      try {
+        const response = await fetch("https://localhost/test/scenario")
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`)
+        }
+        const data = await response.json()
+        setActiveScenario(data.active_scenario)
+      } catch (e) {
+        setError(`Failed to fetch active scenario: ${e instanceof Error ? e.message : String(e)}`)
+        console.error("Error fetching active scenario:", e)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+    fetchActiveScenario()
+  }, [])
+
   const handleScenarioClick = (scenarioName: string) => {
-    setActiveScenario(scenarioName)
+    setActiveScenario(getSlug(scenarioName))
   }
 
   const handleBatteryPercentageChange = async (value: number[]) => {
@@ -96,7 +119,7 @@ export default function SimulatorDashboard() {
               {scenarios.map((scenario) => (
                 <Button
                   key={scenario.name}
-                  variant={activeScenario === scenario.name ? "default" : "outline"}
+                  variant={activeScenario === getSlug(scenario.name) ? "default" : "outline"}
                   className="justify-start"
                   onClick={() => handleScenarioClick(scenario.name)}
                   disabled={isLoading}
