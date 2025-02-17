@@ -33,6 +33,8 @@ export default function SimulatorDashboard() {
       setIsLoading(true)
       setError(null)
       try {
+        if (activeScenario === "") return
+        
         const slug = activeScenario.toLowerCase().replace(/ /g, "-")
         const response = await fetch(`https://localhost/test/scenario/${slug}`)
         if (!response.ok) {
