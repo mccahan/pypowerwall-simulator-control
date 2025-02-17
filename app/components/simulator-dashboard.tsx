@@ -16,6 +16,7 @@ const scenarios = [
   { name: "Self-Powered", icon: Home },
   { name: "Battery-Powered", icon: Battery },
   { name: "Grid Charging", icon: Zap },
+  { name: "Solar Charging", icon: Battery },
 ]
 
 const outages = [
