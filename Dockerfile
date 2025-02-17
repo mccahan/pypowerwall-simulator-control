@@ -23,5 +23,5 @@ RUN yarn build
 
 EXPOSE 3000
 
-ENTRYPOINT ["yarn"]
-CMD ["start"]
+RUN chmod +x docker-entrypoint.sh
+CMD ["/bin/sh", "docker-entrypoint.sh"]
