@@ -123,7 +123,7 @@ export default function SimulatorDashboard() {
           <div>
             <h2 className="text-2xl font-semibold mb-4">Power Flow</h2>
             <iframe
-              src="http://localhost:8675"
+              src={process.env.NEXT_PUBLIC_DATAVIZ_URL || "http://localhost:8675"}
               className="min-h-[300px] relative h-64 rounded-lg w-full"
             ></iframe>
             <div className="mt-6">
