@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec npx serve@latest .
+exec serve .
