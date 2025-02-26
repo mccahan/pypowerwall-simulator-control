@@ -1,0 +1,31 @@
+services:
+  pypowerwallsim:
+    image: jasonacox/pypowerwall
+    ports:
+      - "8675:8675"
+    environment:
+      - TZ=UTC
+      - PW_HOST=pwsim
+      - PW_PASSWORD=password
+      - PW_EMAIL=me@example.com
+      - PW_DEBUG=yes
+    restart: unless-stopped
+    depends_on:
+      - pwsim
+
+  pwsim:
+    image: jasonacox/pwsimulator
+    container_name: powerwall
+    ports:
+      - "443:443"
+
+  control:
+    image: mccahan/pypowerwall-simulator-control
+    container_name: pypowerwall_simulator
+    ports:
+      - "3001:3000"
+    environment:
+      - TZ=UTC
+    restart: unless-stopped
+    depends_on:
+      - pypowerwallsim
